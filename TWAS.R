@@ -1,0 +1,33 @@
+library(lmerTest)
+input_name <- "TPM.txt"
+df2 <- read.table(input_name,header = T,row.names=1,sep = "\t")
+df <- t(df2)
+df <- data.frame(df)
+df$Group <- factor(df$Group)
+for (i in 1:(ncol(df)-14)) {
+  exp_i <- df[,i]
+  exp_i <- as.data.frame(exp_i)
+  colnames(exp_i)[1] <- "Gene"
+  TRL_fit <- lmer(TRL ~ exp_i$Gene + PC1 + PC2 + PC3 + (1|Group),data=df)
+  RS_fit <- lmer(RS ~ exp_i$Gene + PC1 + PC2 + PC3 + (1|Group),data=df)
+  RV_fit <- lmer(RV ~ exp_i$Gene + PC1 + PC2 + PC3 + (1|Group),data=df)
+  RFW_fit <- lmer(RFW ~ exp_i$Gene + PC1 + PC2 + PC3 + (1|Group),data=df)
+  RD_fit <- lmer(RD ~  exp_i$Gene + PC1 + PC2 + PC3 + (1|Group),data=df)
+  TRL_resid_fit <- lmer(TRL_resid ~ exp_i$Gene + PC1 + PC2 + PC3 + (1|Group),data=df)
+  RS_resid_fit <- lmer(RS_resid ~ exp_i$Gene + PC1 + PC2 + PC3 + (1|Group),data=df)
+  RV_resid_fit <- lmer(RV_resid ~ exp_i$Gene + PC1 + PC2 + PC3 + (1|Group),data=df)
+  RFW_resid_fit <- lmer(RFW_resid ~ exp_i$Gene + PC1 + PC2 + PC3 + (1|Group),data=df)
+  RD_resid_fit <- lmer(RD_resid ~ exp_i$Gene + PC1 + PC2 + PC3 + (1|Group),data=df)
+  TRL_output <- summary(TRL_fit)
+  RS_output <- summary(RS_fit)
+  RV_output <- summary(RV_fit)
+  RFW_output <- summary(RFW_fit)
+  RD_output <- summary(RD_fit)
+  TRL_resid_output <- summary(TRL_resid_fit)
+  RS_resid_output <- summary(RS_resid_fit)
+  RV_resid_output <- summary(RV_resid_fit)
+  RFW_resid_output <- summary(RFW_resid_fit)
+  RD_resid_output <- summary(RD_resid_fit)
+  TWAS_pvalue <- paste(colnames(df)[i],TRL_output$coefficients[2,5],RS_output$coefficients[2,5],RV_output$coefficients[2,5],RFW_output$coefficients[2,5],RD_output$coefficients[2,5],TRL_resid_output$coefficients[2,5],RS_resid_output$coefficients[2,5],RV_resid_output$coefficients[2,5],RFW_resid_output$coefficients[2,5],RD_resid_output$coefficients[2,5],sep = "&")
+  print(TWAS_pvalue)
+}
